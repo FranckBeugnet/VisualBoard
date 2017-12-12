@@ -1,35 +1,32 @@
-  <html>
+<html>
   <head>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawChart);
-
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Jours', 'Ideal', 'RAF'],
-          ['12/12/2017',41,41],
-          ['13/12/2017',35,41],
-          ['14/12/2017',29,41],
-          ['15/12/2017',23,41],
-          ['18/12/2017',17,41]
-          ['19/12/2017',11,41]
-          ['20/12/2017',5,41]
+          ['Jours', 'Ideal', 'Réalisé'],
+          ['12/12',41,41],
+          ['13/12',35,41],
+          ['14/12',29,41],
+          ['15/12',23,41],
+          ['18/12',17,41],
+          ['19/12',11,41],
+          ['20/12',5,41]
         ]);
-
         var options = {
           title: 'PortailPlanification - Burndown chart - Sprint 5',
           curveType: 'function',
-          legend: { position: 'bottom' }
+		  lineWidth: 3,
+		  colors: ['#00897B', '#0D47A1']
         };
-
         var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
         chart.draw(data, options);
       }
     </script>
   </head>
-  <body>
+  <body  bgcolor="white">
     <div id="curve_chart" style="width: 700px; height: 700px"></div>
   </body>
 </html>
