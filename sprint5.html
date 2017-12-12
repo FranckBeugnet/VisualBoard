@@ -7,17 +7,19 @@
 
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Jours', 'Sales', 'Expenses'],
-          ['2004',  1000,      400],
-          ['2005',  1170,      460],
-          ['2006',  660,       1120],
-          ['2007',  1030,      540]
+          ['Jours', 'Ideal', 'RAF'],
+          ['12/12/2017',41,41],
+          ['13/12/2017',35],
+          ['14/12/2017',29],
+          ['15/12/2017',23],
+          ['18/12/2017',17]
+          ['19/12/2017',11]
+          ['20/12/2017',5]
         ]);
 
         var options = {
-          title: 'Company Performance',
-          curveType: 'function',
-          legend: { position: 'bottom' }
+          title: 'PortailPlanification - Burndown chart - Sprint 5',
+          curveType: 'function'
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
