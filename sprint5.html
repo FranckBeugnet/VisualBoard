@@ -6,7 +6,7 @@
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Jours', 'Ideal', 'Réalisé'],
+          ['Jours', 'Ideal', 'Real'],
           ['12/12',41,41],
           ['13/12',35,41],
           ['14/12',29,41],
@@ -19,7 +19,32 @@
           title: 'PortailPlanification - Burndown chart - Sprint 5',
           curveType: 'function',
 		  lineWidth: 3,
-		  colors: ['#00897B', '#0D47A1']
+		  chartArea: {width:500,left:50,top:50,height:580},
+		  colors: ['#039BE5', '#FFFFFF'],
+		  backgroundColor: '#4B4B4B',
+          legendTextStyle: {color:'#FFFFFF'},
+          titleTextStyle: {color: '#FFFFFF'},
+		  hAxis: {
+                  textStyle: {
+                     color: '#FFFFFF',
+                     bold: true,
+                     italic: true
+                  },
+                  titleTextStyle: {
+                     color: '#FFFFFF',
+                     bold: false,
+                  }
+               },
+		   vAxis: {
+			  textStyle: {
+				 color: '#FFFFFF',
+				 bold: true
+			  },
+			  titleTextStyle: {
+				 color: '#FFFFFF',
+				 bold: true
+			  }
+		   }
         };
         var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
         chart.draw(data, options);
@@ -27,6 +52,6 @@
     </script>
   </head>
   <body  bgcolor="white">
-    <div id="curve_chart" style="width: 700px; height: 700px"></div>
+    <div id="curve_chart" style="width: 650px; height: 650px"></div>
   </body>
 </html>
