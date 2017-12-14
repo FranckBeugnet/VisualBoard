@@ -12,7 +12,7 @@ events:
     background: red
     date: "2018-01-01"
     name: "Jour de l'an"
-   - 
+  - 
     background: white
     date: "2018-01-09"
     name: "Démo Itération 35"   
