@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Jours', 'Ideal', 'Real'],
+          ['29/11',105,105],
+          ['30/11',97,97],
+          ['1/12',85,87],
+          ['4/12',75,77],
+          ['5/12',66,69],
+          ['6/12',55,55],
+          ['7/12',45,50],
+          ['8/12',35,38],
+          ['11/12',25,28],
+          ['12/12',0,null],
+          ['13/12',0,null],
+          ['14/12',0,null],
+          ['15/12',0,null],
+          ['18/12',0,null],
+          ['19/12',0,null],
+        ]);
+        var options = {
+          title: 'PortailPlanification - Burndown chart - Sprint 5',
+          curveType: 'function',
+		  lineWidth: 3,
+		  chartArea: {width:450,left:50,top:50,height:580},
+		  colors: ['#039BE5', '#FFFFFF'],
+		  backgroundColor: '#4B4B4B',
+          legendTextStyle: {color:'#FFFFFF'},
+          titleTextStyle: {color: '#FFFFFF', 
+			   fontSize: 18, 
+			   bold: true, },
+		  hAxis: {
+                  textStyle: {
+                     color: '#FFFFFF',
+                     bold: true,
+                     italic: true
+                  },
+                  titleTextStyle: {
+                     color: '#FFFFFF',
+                     bold: false,
+                  }
+               },
+		   vAxis: {
+			  textStyle: {
+				 color: '#FFFFFF',
+				 bold: true
+			  },
+			  titleTextStyle: {
+				 color: '#FFFFFF',
+				 bold: true
+			  }
+		   }
+        };
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body bgcolor="#4B4B4B">
+    <div id="curve_chart" style="width: 600px; height: 650px"></div>
+  </body>
+</html>
