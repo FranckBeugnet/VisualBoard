@@ -38,6 +38,10 @@ events:
     name: "Demo Sprint 6 - Pocker Sprint 7"    
   - 
     background: white
+    date: "2018-01-24"
+    name: "Démo PICRU Allignement SI"
+  - 
+    background: white
     date: "2018-01-31"
     name: "Liv. PICRU Allignement SI"
   - 
