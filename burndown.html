@@ -10,17 +10,17 @@ raf 26 - 2 = 24
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Jours', 'Ideal', 'Real'],
-          ['05/02',62,62],
-          ['06/02',56,null],
-          ['07/02',50,null],
-          ['08/02',43,null],
-          ['09/02',36,null],
-          ['12/02',29,null],
-          ['13/02',22,null],
-	  ['14/02',15,null],
-	  ['15/02',8,null],
-	  ['16/02',0,null]
+          ['Jours', 'Ideal', 'Real', 'Bonus'],
+          ['05/02',62,62,13],
+          ['06/02',56,null,13],
+          ['07/02',50,null,13],
+          ['08/02',43,null,13],
+          ['09/02',36,null,13],
+          ['12/02',29,null,13],
+          ['13/02',22,null,13],
+	  ['14/02',15,null,13],
+	  ['15/02',8,null,13],
+	  ['16/02',0,null,13]
         ]);
         var options = {
         title: 'PortailPlanification - Burndown chart - Sprint 7',
@@ -28,7 +28,7 @@ raf 26 - 2 = 24
 	lineWidth: 3,
 	pointSize: 7,
 	chartArea: {width:450,left:50,top:50,height:550},
-	colors: ['#039BE5', '#FFFFFF'],
+	colors: ['#039BE5', '#FFFFFF', '#4DB6AC'],
 	backgroundColor: '#4B4B4B',
         legendTextStyle: {color:'#FFFFFF'},
         titleTextStyle: {color: '#FFFFFF', 
