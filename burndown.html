@@ -9,17 +9,17 @@
       google.charts.setOnLoadCallback(drawChart);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['Jours', 'Ideal', 'Real'],
-          ['19/02',82,82],
-          ['20/02',73,82],
-          ['21/02',64,66],
-	  ['22/02',55,60],
-          ['23/02',46,59],
-          ['26/02',37,null],
-          ['27/02',28,null],
-          ['28/02',19,null],
-	  ['01/03',9,null],
-	  ['02/03',0,null]
+          ['Jours', 'Ideal', 'Real','Obj'],
+          ['19/02',103,103,23],
+          ['20/02',92,103,23],
+          ['21/02',81,83,23],
+	  ['22/02',70,77,23],
+          ['23/02',59,70,23],
+          ['26/02',47,null,23],
+          ['27/02',35,null,23],
+          ['28/02',23,null,23],
+	  ['01/03',11,null,23],
+	  ['02/03',0,null,23]
         ]);
         var options = {
         title: 'PortailPlanification - Burndown chart - Sprint 11',
