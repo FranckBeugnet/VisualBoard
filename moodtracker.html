@@ -21,25 +21,28 @@
 			  setVote(5);
 			});
 			
+			//updates data into storage
 			function setVote(value) {
 				let currentData=localStorage.getItem('MoodWidget_Data');
 				if(currentData !== undefined && currentData !==null){
 					currentData = JSON.parse(currentData);
 				}else{
-					currentData = JSON.parse('{"cols": [{"id": "day", "label": "Jour", "type": "string"},{"id": "mood5", "label": "Tres Content", "type": "number"},{"id": "mood4", "label": "Content", "type": "number"},{"id": "mood3", "label": "Moyen", "type": "number"},{"id": "mood2", "label": "Mécontent", "type": "number"},{"id": "mood1", "label": "Très Mécontent", "type": "number"}], "rows": []}');
+					currentData = JSON.parse('{"cols": [{"id": "day", "label": "Jour", "type": "string"},{"id": "mood5", "label": "Tres Content", "type": "number"},{"id": "mood4", "label": "Content", "type": "number"},{"id": "mood3", "label": "Moyen", "type": "number"},{"id": "mood2", "label": "Mécontent", "type": "number"},{"id": "mood1", "label": "Très Mécontent", "type": "number"},{"id": "mood6", "label": "moyenne", "type": "number"}], "rows": []}');
 				}
-				var currentDay = (new Date).getDate()+'/'+((new Date).getMonth()+1)+'/'+(new Date).getFullYear()
+				let currentDay = (new Date).getDate()+'/'+((new Date).getMonth()+1)+'/'+(new Date).getFullYear();
 				//identify good series
-				var find=false;
+				let find=false;
 				currentData.rows.forEach(function(row) {
 					if(row.c[0].v == currentDay){ //day already track
 						row.c[value].v = row.c[value].v + 1 ;
+						row.c[6].v = (((row.c[1].v*5)+(row.c[2].v*4)+(row.c[3].v*3)+(row.c[4].v*2)+row.c[5].v)/(row.c[1].v+row.c[2].v+row.c[3].v+row.c[4].v+row.c[5].v)).toFixed(2);
 						find=true;
 					}
 				});
 				if(find==false){ //day never track
-					var row = {c: [ {v: currentDay}, {v: 0},{v: 0},{v: 0},{v: 0},{v: 0}] };
+					let row = {c: [ {v: currentDay}, {v: 0},{v: 0},{v: 0},{v: 0},{v: 0},{v: 0}] };
 					row.c[value].v = row.c[value].v + 1 ;
+					row.c[6].v = (((row.c[1].v*5)+(row.c[2].v*4)+(row.c[3].v*3)+(row.c[4].v*2)+row.c[5].v)/(row.c[1].v+row.c[2].v+row.c[3].v+row.c[4].v+row.c[5].v)).toFixed(2);
 					currentData.rows.push(row);
 				}
 				//save data
@@ -48,15 +51,30 @@
 				drawMoodChart();
 			}
 			
+			//filter series for only X last Days
+			function lastDaySeries(jsonData,nbdays){
+				let i=0;
+				jsonData.rows.forEach(function(row) {
+					if(i<(jsonData.rows.length-nbdays)){
+						delete jsonData.rows[i];
+					}
+					i=i+1;
+				});
+				jsonData.rows=jsonData.rows.filter(function(x) { return x !== null });
+				return jsonData;
+			}
+			
+			//dray google chart
 			function drawMoodChart(){
 				google.charts.load('current', {'packages':['corechart']});
 				google.charts.setOnLoadCallback(drawVisualization);
 				function drawVisualization() {
-					var data = new google.visualization.DataTable(JSON.parse(localStorage.getItem('MoodWidget_Data')));
-					var options = {
+					let data = new google.visualization.DataTable(lastDaySeries(JSON.parse(localStorage.getItem('MoodWidget_Data')),10));
+					let options = {
 						title: 'Team Mood Tracker',
 						legend: {position: 'none'},
 						hAxis: {
+							showTextEvery: 2,
 							textStyle: {
 								color: '#FFFFFF',
 								bold: true,
@@ -67,39 +85,62 @@
 								bold: false,
 							}
 						},
-					   vAxis: {
-							textStyle: {
-								color: '#FFFFFF',
-								bold: true
+						vAxes: {
+							0: {
+								title: 'Votes',
+								textStyle: {
+									color: '#FFFFFF',
+									bold: true
+								},
+								titleTextStyle: {
+									color: '#FFFFFF',
+									bold: true
+								}
 							},
-							titleTextStyle: {
-								color: '#FFFFFF',
-								bold: true
+							1: {
+								title: 'Moyenne',
+								textStyle: {
+									color: '#FFFFFF',
+									bold: true
+								},
+								titleTextStyle: {
+									color: '#FFFFFF',
+									bold: true
+								}
 							}
 						},
+						series: {0:{targetAxisIndex:0},
+								 1:{targetAxisIndex:0},
+								 2:{targetAxisIndex:0},
+								 3:{targetAxisIndex:0},
+								 4:{targetAxisIndex:0},
+								 5:{targetAxisIndex:1,type:'line'},
+								},
 						seriesType: 'bars',
 						isStacked: true,
-						chartArea: {width:550,left:30,top:50,height:450},
-						colors: ['#FDD835', '#7CB342', '#039BE5', '#D81B60', '#E53935'],
+						chartArea: {width:515,left:45,top:50,height:450},
+						colors: ['#FDD835', '#7CB342', '#039BE5', '#D81B60', '#E53935','#FFFFFF'],
 						backgroundColor: '#4B4B4B',
 						legendTextStyle: {color:'#FFFFFF'},
+						lineWidth: 5,
 						titleTextStyle: {
 							color: '#FFFFFF', 
 							fontSize: 18, 
 							bold: true
 						}
 					};
-					var chart = new google.visualization.ComboChart(document.getElementById('curve_chart'));
+					let chart = new google.visualization.ComboChart(document.getElementById('mychart'));
 					chart.draw(data, options);
 				}
 			}
+			//init page
 			drawMoodChart();
 		});
     </script>
   </head>
   <body bgcolor="#4B4B4B">
 	<div style="display: flex; flex-direction: column; width: 600px; height: 650px;">
-		<div id="curve_chart" style="width: 600px; height: 530px"></div>
+		<div id="mychart" style="width: 600px; height: 530px"></div>
 		<div style="display: flex; flex-direction:row; justify-content: space-between;">
 			<div id="mood5"><img style="width: 115px; height: 120px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASsAAAElCAIAAAAzzFOTAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAU1SURBVHhe7dxLchNZEEBR6G2wDgbsf8CAdbCPdkc4ut3GkvWp0tXLOmeCJ0RAvrx6JYetr79/fP8CRP56/RMoKBBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKH39/eP765dc49vPX69f/d9x5mkCm1Dg1U5t3luzp2oCG1LgFS7ZvLfmzdYENqfAi1y7eW/NmLAJ7MR3Yj53z/K9uPOvPwMT2I8CP7HJ9iy9giawKwWes+HeLLqCJrA3BUJJgSdt/pq93CVgAg+gQCgpEEoK/NhOz0sLPYaZwGMoEEoKhJICoaRAKCkQSgr82E4/zr/QbwmYwGMoEEoKhJICT9r8eWm5BzATeAAFQkmB52z4mr3oy78J7E2Bn9hkb5ZePhPYlQI/d+f2DFg+E9iPAi9y8w6NWT4T2IlPK7zO5b9cM3WwJrAtBd7o1CIeZ54msAkFQsn7QCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEpff//4/volz+fbz1+vX23BWT8hBca2beweNiGhwMd5ntguZz32psAdrZjcebZlcwrc0rzkzrM891PgvXatbtvTWeifehwKvNFW2/w885/3P1qCAq9zz5ouN+o7m7Ral1DgRW7bxXmzNYfNKfCcGxbuOPM0nE0o8GNXrZcZGtfNFPjehctkbqcY4FUU+B+rsy3zvIQC/3HJrhjUbXR43tEL/HQ/hLcVo/7QcQu0EAljf+eIBVqCnCP41+EKPH/22nskZ/HiQAU67+d08HM5SoFnjll7z+CwB3SIAk+drvaezQFPan6B8lvL0S7D4QV+eJzae37Hed0cW6Crb3UHOcGZn9grvwFOHdapw13UgT4zW37LeTmy8ac28Cn0z9dI7a1u8JlOuwPlN9KfhzjmWXRUgcPeIXDejOMe/j7QBTjG1KOcU6Dnz/FGPouOvQPlN9K8CIcU6B0gi5p5B7oABxt2uBMKdAEe3NILMPAOdAGON+mIx34nBpawfIEeQXmx7hpMuwM9gh7EmINe/iez3734KZC1eB8IJQVCSYFQmv9ZafDM3IFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBULny5e/AdMaUHvCmD9fAAAAAElFTkSuQmCC"/></div>
 			<div id="mood4"><img style="width: 115px; height: 120px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASsAAAElCAIAAAAzzFOTAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAR8SURBVHhe7d3NUSpRFEZRfGmYgGEZmmGZgHk8qmQgKD8Nt9l0s9ZEJk6+OhvREn35fH3fAJF/u49AQYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQunl8/V995Ap3r4+do/2Pc+eFhhCgZMdu7yf1r2qBQZS4ASXXN5P69vWAsMp8CJTL++ndSxsgZn4Scx5txzf1o2f/ggsMB8FnjHkehZ9ghaYlQJPGXg3Cz1BC8xNgVBS4FHDn7MX90XAAnegQCgpEEoK/NtMr5cW9DLMAvehQCgpEEoKhJICoaRAKCnwbzP9Ov+C3iVggftQIJQUCCUFHjX89dLiXoBZ4A4UCCUFnjLwOXuhT/8WmJsCzxhyN4s+PgvMSoHn3Xg9Kzg+C8xHgRe5+oZWc3wWmIm/VjjN5W+uWeuwFhhLgVc6dojPs6cFhlAglHwfCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBUJJgVBSIJQUCCUFQkmBUFIglBQIJQVCSYFQUiCUFAglBULp5fP1ffcQZvb29bF7tNk4vG8KZEY/k/vN7W0pkJFOJ3fA7W0pkJtMSu6A29tSIBPc0tsBh/dNgZwyMLktx/abAtkjuTtT4LOTXEuBT0dyD0WB6ye5R6bAFZLcgihwDSS3XApcJMmthgKXQXJrpcAHJbknocBHIbnnpMCG3vimwDuRHH9S4FwkxyUUOIzkuIICryc5bqfACSTHcAo8RXLMTYGHBlZnW85S4J4b8zMmUylwz9QCrceNFLjnbIHmYiwFHjqI0D7MSoFQ8r+ToKRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEEoKhJICoaRAKCkQSgqEkgKhpEAoKRBKCoSSAqGkQCgpEDqbzX8kDOxxnVNrdAAAAABJRU5ErkJggg==" /></div>
