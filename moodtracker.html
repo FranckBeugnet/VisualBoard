@@ -28,8 +28,7 @@
 				}else{
 					currentData = JSON.parse('{"cols": [{"id": "day", "label": "Jour", "type": "string"},{"id": "mood5", "label": "Tres Content", "type": "number"},{"id": "mood4", "label": "Content", "type": "number"},{"id": "mood3", "label": "Moyen", "type": "number"},{"id": "mood2", "label": "Mécontent", "type": "number"},{"id": "mood1", "label": "Très Mécontent", "type": "number"}], "rows": []}');
 				}
-				//var currentDay = (new Date).getDate()+'/'+((new Date).getMonth()+1)+'/'+(new Date).getFullYear()
-				var currentDay = "15/14/2018"
+				var currentDay = (new Date).getDate()+'/'+((new Date).getMonth()+1)+'/'+(new Date).getFullYear()
 				//identify good series
 				var find=false;
 				currentData.rows.forEach(function(row) {
